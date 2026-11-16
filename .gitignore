@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Configuration (local overrides)
+config/local.yaml
+
+# Data
+/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Logs
+*.log
+logs/
+
+# Screenshots & downloads
+screenshots/
+downloads/
+
+# Temp directories
+/tmp/veeos-*
+/tmp/chrome-*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Docker
+docker-compose.override.yml

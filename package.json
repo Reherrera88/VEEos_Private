@@ -1,0 +1,36 @@
+{
+  "name": "veeos",
+  "version": "1.0.0",
+  "description": "VEEos - Multi-account Google Flow MCP Pool API",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "api": "node src/api/server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "docker:build": "docker build -t veeos:latest -f docker/Dockerfile .",
+    "docker:run": "docker run -d --name veeos -p 3456:3456 -p 9222-9240:9222-9240 -v /home/user/.config/google-chrome:/host-chrome:ro veeos:latest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "playwright": "^1.51.0",
+    "zod": "^3.24.0",
+    "express": "^4.19.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "yaml": "^2.4.0",
+    "better-sqlite3": "^9.4.0",
+    "uuid": "^10.0.0",
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

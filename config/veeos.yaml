@@ -1,0 +1,113 @@
+# VEEos Configuration - Multi-account Google Flow Pool
+# Copy to config/local.yaml and customize
+
+pool:
+  # Base CDP port - each account gets base + index
+  cdpPortBase: 9222
+  
+  # Chrome executable path (inside container)
+  chromePath: "/usr/bin/google-chrome-stable"
+  
+  # Default timeout for job execution (ms)
+  jobTimeoutMs: 300000
+  
+  # Delay between UI actions (anti-detection)
+  actionDelayMs: 800
+  
+  # Poll interval for generation completion
+  generationPollIntervalMs: 5000
+  maxPollAttempts: 120
+  
+  # Download wait time
+  downloadWaitMs: 30000
+  
+  # Headless mode (true for server, false for debugging)
+  headless: true
+  
+  # Locale for Google Flow UI
+  locale: "en"
+
+# Account configurations - each entry = one Chrome instance
+accounts:
+  - id: "flow-account-1"
+    email: "your-account-1@gmail.com"
+    chromeProfile: "Profile 3"
+    # Host path to Chrome user data (mounted in container)
+    hostUserDataDir: "/host-chrome"
+    initialCredits: 150
+    priority: "high"
+    enabled: true
+    
+  - id: "flow-account-2"
+    email: "your-account-2@gmail.com"
+    chromeProfile: "Profile 4"
+    hostUserDataDir: "/host-chrome"
+    initialCredits: 100
+    priority: "normal"
+    enabled: true
+
+# Scheduler configuration
+scheduler:
+  # Strategy: credit-aware-round-robin | least-loaded | priority-first
+  strategy: "credit-aware-round-robin"
+  
+  # Maximum concurrent jobs per account (Chrome limitation = 1)
+  maxConcurrentPerAccount: 1
+  
+  # Credit warning threshold
+  creditWarningThreshold: 20
+  
+  # Credit critical threshold (account paused)
+  creditCriticalThreshold: 5
+  
+  # Cost estimates per model (credits)
+  modelCosts:
+    "Nano Banana Pro": 10
+    "Nano Banana 2": 5
+    "Imagen 4": 8
+    "Omni Flash": 15
+    "Veo 3.1 - Lite": 12
+    "Veo 3.1 - Fast": 18
+    "Veo 3.1 - Quality": 25
+    "Grid Architect": 20
+
+# API Server configuration
+api:
+  host: "0.0.0.0"
+  port: 3456
+  
+  # Auth: none | bearer | apikey
+  auth:
+    type: "bearer"
+    # Generate with: openssl rand -hex 32
+    token: "CHANGE_ME_GENERATE_SECURE_TOKEN"
+    # Optional: API key header name
+    headerName: "Authorization"
+  
+  # Rate limiting
+  rateLimit:
+    windowMs: 60000
+    maxRequests: 100
+  
+  # CORS
+  cors:
+    origin: "*"
+    credentials: true
+
+# Database for persistence
+database:
+  path: "/data/veeos.db"
+  
+# Logging
+logging:
+  level: "info"
+  pretty: true
+  
+# Health checks
+health:
+  intervalMs: 30000
+  timeoutMs: 10000
+  # Auto-restart account on health failure
+  autoRestart: true
+  maxRestarts: 3
+  restartDelayMs: 60000

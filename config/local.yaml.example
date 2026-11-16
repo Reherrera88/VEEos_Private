@@ -1,0 +1,83 @@
+# VEEos Local Configuration
+# Copy this file to config/local.yaml and customize
+# This file is gitignored and overrides config/veeos.yaml
+
+pool:
+  cdpPortBase: 9222
+  chromePath: "/usr/bin/google-chrome-stable"
+  jobTimeoutMs: 300000
+  actionDelayMs: 800
+  generationPollIntervalMs: 5000
+  maxPollAttempts: 120
+  downloadWaitMs: 30000
+  headless: true
+  locale: "en"
+
+accounts:
+  - id: "flow-main"
+    email: "your-main@gmail.com"
+    chromeProfile: "Profile 3"
+    hostUserDataDir: "/host-chrome"
+    initialCredits: 150
+    priority: "high"
+    enabled: true
+
+  - id: "flow-secondary"
+    email: "your-secondary@gmail.com"
+    chromeProfile: "Profile 4"
+    hostUserDataDir: "/host-chrome"
+    initialCredits: 100
+    priority: "normal"
+    enabled: true
+
+  # Add more accounts as needed
+  # - id: "flow-account-3"
+  #   email: "account3@gmail.com"
+  #   chromeProfile: "Profile 5"
+  #   hostUserDataDir: "/host-chrome"
+  #   initialCredits: 150
+  #   priority: "low"
+  #   enabled: true
+
+scheduler:
+  strategy: "credit-aware-round-robin"
+  maxConcurrentPerAccount: 1
+  creditWarningThreshold: 20
+  creditCriticalThreshold: 5
+  modelCosts:
+    "Nano Banana Pro": 10
+    "Nano Banana 2": 5
+    "Imagen 4": 8
+    "Omni Flash": 15
+    "Veo 3.1 - Lite": 12
+    "Veo 3.1 - Fast": 18
+    "Veo 3.1 - Quality": 25
+    "Grid Architect": 20
+
+api:
+  host: "0.0.0.0"
+  port: 3456
+  auth:
+    type: "bearer"
+    token: "CHANGE_ME_GENERATE_WITH: openssl rand -hex 32"
+    headerName: "Authorization"
+  rateLimit:
+    windowMs: 60000
+    maxRequests: 100
+  cors:
+    origin: "*"
+    credentials: true
+
+database:
+  path: "/data/veeos.db"
+
+logging:
+  level: "info"
+  pretty: true
+
+health:
+  intervalMs: 30000
+  timeoutMs: 10000
+  autoRestart: true
+  maxRestarts: 3
+  restartDelayMs: 60000

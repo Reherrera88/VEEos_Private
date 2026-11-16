@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  veeos:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: veeos:latest
+    container_name: veeos
+    restart: unless-stopped
+    ports:
+      - "3456:3456"      # API server
+      - "9222-9240:9222-9240"  # CDP ports for Chrome instances
+    volumes:
+      # Mount host Chrome profiles (READ ONLY - VEEos copies them)
+      - ${CHROME_USER_DATA_DIR:-/home/user/.config/google-chrome}:/host-chrome:ro
+      # Persistent data
+      - veeos-data:/data
+      # Local config override
+      - ./config/local.yaml:/app/config/local.yaml:ro
+    environment:
+      - NODE_ENV=production
+      - VEEOS_CONFIG=/app/config/local.yaml
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+      - PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+      # Optional: enable MCP mode
+      - VEEOS_MCP_MODE=false
+    # Resource limits (adjust based on number of accounts)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    # Health check is in Dockerfile
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Reverse proxy with SSL
+  # nginx:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "443:443"
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - veeos
+
+volumes:
+  veeos-data:
+    driver: local
